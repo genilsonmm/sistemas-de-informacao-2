@@ -27,29 +27,4 @@ public class Si2apiApplication {
 	public String bemVindo() {
 		return "Bem vindos ao curso de SI2";
 	}
-	
-	@RequestMapping(value="/listar", method = RequestMethod.GET)
-	public String listar() {
-		return "Listar valores";
-	}
-	
-	@GetMapping("/usuario/id/{numero}")
-	public String user(@PathVariable String numero) {
-		return "usuário de id: " + numero;
-	}
-	
-	@PostMapping("/usuario")
-	public String cadastrarUsuario(@RequestBody Usuario usuario) {
-		return "Usuário " + usuario.getNome() + " cadastrado com sucesso!";
-	}	
-	
-	@DeleteMapping("/usuario/{id}")
-	public String deletarUsuario(@PathVariable int id) {
-		return "Usuário de Id: " + id + " removido com sucesso!";
-	}	
-	
-	@PutMapping("/usuario/{id}")
-	public String atualizarUsuario(@PathVariable int id, @RequestBody Usuario usuario) {
-		return "Usuário de Id: " + id + " atualizado para: " + usuario;
-	}
 }

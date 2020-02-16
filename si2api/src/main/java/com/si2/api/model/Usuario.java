@@ -6,6 +6,12 @@ public class Usuario {
 	private String nome;
 	private int idade;
 	
+	public Usuario(int id, String nome, int idade) {
+		this.id = id;
+		this.nome = nome;
+		this.idade = idade;
+	}
+	
 	public int getId() {
 		return id;
 	}

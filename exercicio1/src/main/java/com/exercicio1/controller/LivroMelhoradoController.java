@@ -69,7 +69,6 @@ public class LivroMelhoradoController {
 		response.setStatus(HttpStatus.OK.value());
 		
 		return ResponseEntity.ok(response);
-
 	}
 	
 	@PutMapping("/{id}")

@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exercicio1.model.Livro;
+import com.exercicio1.model.Response;
 import com.exercicio1.repository.LivroRepository;
 
 @RestController()
-@RequestMapping("/api/v1/livros")
-public class LivroController {
+@RequestMapping("/api/v2/livros")
+public class LivroMelhoradoController {
 	
-	public LivroController() {
+	public LivroMelhoradoController() {
 		
 	}
 	
@@ -45,17 +48,28 @@ public class LivroController {
 	}
 	
 	@PostMapping()
-	public ResponseEntity<Livro> cadastrar(@RequestBody Livro livro) {				
-		try
+	public ResponseEntity<Response<Livro>> cadastrar(@Valid @RequestBody Livro livro, BindingResult result) {					
+		
+		Response<Livro> response = new Response<Livro>();
+		
+		if(result.hasErrors())
 		{
-			LivroRepository.instance().add(livro);		
-			return new ResponseEntity<Livro>(livro, HttpStatus.OK);
+			for (ObjectError error : result.getAllErrors()) {
+				String key = String.valueOf(response.getErrors().size() + 1); 
+				response.getErrors().put(key, error.getDefaultMessage());
+			}
+			
+			response.setStatus(HttpStatus.BAD_REQUEST.value());
+			return ResponseEntity.badRequest().body(response);
 		}
-		catch (Exception e) {
-			//indica que o servidor não pode ou não irá processar a requisição devido 
-			//a alguma coisa que foi entendida como um erro do cliente
-			return new ResponseEntity<Livro>(livro, HttpStatus.BAD_REQUEST);
-		}
+		
+		LivroRepository.instance().add(livro);	
+		
+		response.setData(livro);
+		response.setStatus(HttpStatus.OK.value());
+		
+		return ResponseEntity.ok(response);
+
 	}
 	
 	@PutMapping("/{id}")

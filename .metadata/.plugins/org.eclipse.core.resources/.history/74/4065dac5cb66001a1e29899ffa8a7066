@@ -1,0 +1,50 @@
+package com.exercicio1.model;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+
+public class Livro {
+	
+	private int id;
+	private String titulo;
+	private String editora;
+	private long paginas;
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@NotEmpty(message = "O título não pode ser vazio.")
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	@NotEmpty(message = "A editora não pode ser vazio.")
+	public String getEditora() {
+		return editora;
+	}
+
+	public void setEditora(String editora) {
+		this.editora = editora;
+	}
+
+	@NotNull(message = "O número de páginas não pode ser vazio.")
+	@Size(min = 10, max = 1000, message = "A quantidade de páginas deve ser de 5 à 1000.")
+	public long getPaginas() {
+		return paginas;
+	}
+
+	public void setPaginas(long paginas) {
+		this.paginas = paginas;
+	}
+}

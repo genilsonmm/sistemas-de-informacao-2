@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introdução ao vue</title>
+</head>
+<body>
+    
+    <div id="app">
+        <h1>{{ mensagem }}</h1>
+        <a v-on:click.prevent.stop="modificarTexto" href="">Site da facisa</a>
+
+        <div>
+            <label>Titulo do livro</label>
+            <input type="text" v-model="titulo"/>
+
+            <br><br>
+            <label>Editora</label>
+            <input type="text" v-model="editora"/>
+
+            <br><br>
+            <label>Tipo do livro</label>
+            <input type="radio" value="Impresso" v-model="tipo_livro"/>Impresso 
+            <input type="radio" value="Digital" name="tipo_livro" v-model="tipo_livro"/>Digital
+
+            <br><br>
+            <label>Relacionados</label>
+            <br>
+            <input type="checkbox" value="Drama" v-model="relacionados"/> Drama <br>
+            <input type="checkbox" value="Ação" v-model="relacionados"/> Ação <br>
+            <input type="checkbox" value="Técnico" v-model="relacionados"/> Técnico <br>
+            <input type="checkbox" value="Programação" v-model="relacionados"/> Programação <br>
+
+            <br><br>
+            <label>Como nos conheceu</label>
+            <select v-model="conheceu">
+                <option value="">Escolha</option>
+                <option value="Google">Google</option>
+                <option value="TV">TV</option>
+                <option value="Revista">Revista</option>
+            </select>
+
+            <br><br>
+            <button v-on:click="cadastrar">Cadastrar</button>
+
+            <br>
+            titulo {{ titulo }} <br>
+            editora {{ editora }} <br>
+            tipo_livro {{ tipo_livro }} <br>
+            relacionados {{ relacionados }} <br>
+            conheceu {{ conheceu }}
+
+        </div>
+
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                mensagem: "Ola vue",
+                titulo: "",
+                editora: "",
+                tipo_livro:"",  
+                relacionados: [],
+                conheceu: ""
+            },
+            methods: {
+                cadastrar(){
+                    alert(this.titulo);
+                },
+                modificarTexto(){
+                    this.mensagem = "Clicou";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

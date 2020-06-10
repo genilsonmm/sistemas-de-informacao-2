@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "professor")
@@ -28,6 +29,7 @@ public class Professor {
 	private String nome;
 	
 	@OneToMany(mappedBy="professor", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private List<Disciplina> disciplinas = new ArrayList<Disciplina>();
 	
 	public List<Disciplina> getDisciplinas() {

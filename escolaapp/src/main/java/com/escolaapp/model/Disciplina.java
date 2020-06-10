@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "disciplina")
 public class Disciplina {
@@ -21,6 +23,7 @@ public class Disciplina {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "professor_id")
+	@JsonBackReference
 	private Professor professor;
 	
 	public Professor getProfessor() {
@@ -40,5 +43,10 @@ public class Disciplina {
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	@Override
+	public String toString() {
+		return this.nome;
 	}
 }

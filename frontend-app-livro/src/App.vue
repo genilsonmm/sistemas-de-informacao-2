@@ -4,8 +4,8 @@
     <Topo/>
 
     <div class="row">
-      <MenuLivros :livros="livros"></MenuLivros> 
-      <Cadastro v-on:receiveBooksFromParent="addBook"></Cadastro>
+      <MenuLivros></MenuLivros> 
+      <Cadastro></Cadastro>
     </div>
 
   </div>
@@ -19,20 +19,12 @@ import Cadastro from './components/Cadastro.vue';
 
 export default {
   name: 'App',
-  data(){
-    return {
-      livros: []
-    }
-  },
   components: {
     MenuLivros,
     Topo,
     Cadastro
   },
   methods: {
-    addBook(book){
-      this.livros.push(book);
-    }
   },
   mounted(){
   }

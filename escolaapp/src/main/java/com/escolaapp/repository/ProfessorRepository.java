@@ -39,6 +39,32 @@ public class ProfessorRepository {
 		}
 	}
 	
+	public Professor edit(Professor professor) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();	
+		EntityTransaction transaction = entityManager.getTransaction();
+		
+		Professor professorAtualizado = entityManager.find(Professor.class, professor.getId());
+		professorAtualizado.setNome(professor.getNome());
+		
+		try
+		{
+			transaction.begin();
+			
+			professor = entityManager.merge(professorAtualizado);
+			
+			transaction.commit();
+			
+		}
+		catch(Exception error) {
+			transaction.rollback();
+		}
+		finally {
+			entityManager.close();
+		}
+		
+		return professor;
+	}
+	
 	public List<Professor> getAll(){
 		
 		EntityManager entityManager = entityManagerFactory.createEntityManager();

@@ -40,7 +40,7 @@ export default {
     methods: {
         onSubmitForm(event){
             console.log(this.title);
-            this.$emit('receiveBooksFromParent', { title: this.title, publishing: this.publishing, page: this.page });
+            this.$eventoLivro.$emit('receiveBooksFromParent', { title: this.title, publishing: this.publishing, page: this.page });
 
             this.title='';
             this.publishing='',

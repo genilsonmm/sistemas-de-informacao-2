@@ -12,12 +12,18 @@
 
 <script>
 export default {
-  name: 'MenuLivros',
-  props :{
-    livros: {
-      type: Array,
-      required: true
+  data(){
+    return {
+      livros : []
     }
+  },
+  name: 'MenuLivros',
+  mounted(){
+    this.$eventoLivro.$on('receiveBooksFromParent', (novoLivro) => {
+      if(novoLivro){
+        this.livros.push(novoLivro)
+      }
+    })
   }
 }
 </script>

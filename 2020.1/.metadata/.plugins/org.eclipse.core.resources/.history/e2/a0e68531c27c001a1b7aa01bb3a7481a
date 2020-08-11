@@ -1,0 +1,5 @@
+package com.deliveryapp.repository;
+
+public class CustomerRepository {
+
+}

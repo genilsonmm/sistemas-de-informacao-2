@@ -1,0 +1,60 @@
+package com.deliveryapp.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.deliveryapp.model.Customer;
+
+public class LivroRepository {
+
+	private static LivroRepository instance;
+	
+	private List<Customer> livros = new ArrayList<Customer>();
+	
+	public static LivroRepository instance() {
+		if(instance == null)
+			instance = new LivroRepository();
+		
+		return instance;
+	}
+	
+	public List<Customer> todos(){
+		return livros;
+	}
+	
+	public void add(Customer livro) {
+		livro.setId(proximoId());
+		livros.add(livro);
+	}
+	
+	public Customer editar(int id, Customer livro) throws Exception {
+		
+		Customer livroLocalizado = obterLivro(id);
+		
+		livroLocalizado.setTitulo(livro.getTitulo());
+		livroLocalizado.setEditora(livro.getEditora());
+		livroLocalizado.setPaginas(livro.getPaginas());
+		
+		return livroLocalizado;	
+	}
+	
+	public Customer obterLivro(int id) throws Exception {
+		
+		Optional<Customer> livroLocalizado = livros.stream().filter(l -> l.getId() == id).findFirst();
+		
+		if(livroLocalizado.isPresent())
+			return livroLocalizado.get();
+		else
+			throw new Exception("Não foi possível localizar o livro");
+	}
+	
+	public int remover(int id) throws Exception {
+		livros.remove(obterLivro(id));
+		return id;
+	}
+	
+	private int proximoId() {
+		return livros.size() + 1;
+	}
+}

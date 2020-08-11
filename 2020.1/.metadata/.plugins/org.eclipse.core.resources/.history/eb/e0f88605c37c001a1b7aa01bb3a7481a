@@ -1,0 +1,22 @@
+package com.deliveryapp.repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import com.deliveryapp.model.Customer;
+
+public class CustomerRepository {
+	
+	private EntityManagerFactory entityManagerFactory; 
+	private EntityManager entityManager;
+	
+	public CustomerRepository() {
+		entityManagerFactory = Persistence.createEntityManagerFactory("deliveryDb");
+		entityManager = entityManagerFactory.createEntityManager();
+	}
+	
+	public void add(Customer customer) {
+		
+	}
+}

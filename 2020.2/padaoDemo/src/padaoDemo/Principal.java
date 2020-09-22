@@ -4,9 +4,16 @@ public class Principal {
 
 	public static void main(String[] args) {
 		
-		Janela.getInstance();
+		//1° Clique do botão
+		abrirJanela("Janela 1");
 		
-		Janela.getInstance();
+		//2° Clique no botão
+		abrirJanela("Janela 2");
+		
+		System.out.println(Janela.obterInstanciaUnica().getTexto().size());
 	}
 
+	private static void abrirJanela(String text) {
+		 Janela.obterInstanciaUnica().setTexto(text);
+	}	
 }

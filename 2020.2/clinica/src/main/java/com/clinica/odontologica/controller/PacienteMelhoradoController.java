@@ -2,8 +2,11 @@ package com.clinica.odontologica.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +20,12 @@ import com.clinica.odontologica.repository.Database;
 import com.clinica.odontologica.repository.PacienteRepository;
 
 @RestController
-@RequestMapping("/v1/paciente")
-public class PacienteController {
+@RequestMapping("/v2/paciente")
+public class PacienteMelhoradoController {
 	
 	private PacienteRepository pacienteRepository;
 
-	private PacienteController() {
+	private PacienteMelhoradoController() {
 		this.pacienteRepository = new PacienteRepository();
 		
 		Paciente maria = new Paciente(1, "Maria", "Centro");
@@ -36,32 +39,53 @@ public class PacienteController {
 	
 	//http://localhost:8080/paciente
 	@GetMapping()
-	public ResponseEntity<List<Paciente>> obterTodos(){		
+	public ResponseEntity<Response<List<Paciente>>> obterTodos(){		
+		
+		Response<List<Paciente>> response = new Response<List<Paciente>>();
+		
 		try
 		{
-			return new ResponseEntity<List<Paciente>>(pacienteRepository.obterTodos(), HttpStatus.OK);
+			response.setDados(pacienteRepository.obterTodos());
+			response.setStatus(HttpStatus.OK.value());
+			
+			return ResponseEntity.ok(response);
 		}
 		catch(Exception e)
 		{
-			return new ResponseEntity<List<Paciente>>(HttpStatus.BAD_REQUEST);
+			response.setStatus(HttpStatus.BAD_REQUEST.value());
+			response.getErros().put("1", "Falha ao cadastrar novo paciente");
+			
+			return ResponseEntity.ok(response);
 		}
 	}
 
 	@PostMapping()
-	public ResponseEntity<String> cadastrar(@RequestBody Paciente novoPaciente)
-	{
+	public ResponseEntity<Response<Paciente>> cadastrar(@Valid @RequestBody Paciente novoPaciente)
+	{	
+		Response<Paciente> response = new Response<Paciente>(); 
+		
 		try
-		{
+		{		
 			pacienteRepository.cadastrar(novoPaciente);
-			return new ResponseEntity<String>("Paciente cadastrado com sucesso", HttpStatus.OK);
+			response.setDados(novoPaciente);
+			response.setStatus(HttpStatus.OK.value());
+			
+			return ResponseEntity.ok(response);
 		}
-		catch(Exception e) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		catch(Exception e) {	
+			response.setStatus(HttpStatus.BAD_REQUEST.value());
+			response.getErros().put("1", "Falha ao cadastrar novo paciente");
+			
+			return ResponseEntity.ok(response);
 		}
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deletar(@PathVariable int id){
+		
+		Response<String> response = new Response<String>();
+		
+		
 		try
 		{
 			pacienteRepository.remover(id);

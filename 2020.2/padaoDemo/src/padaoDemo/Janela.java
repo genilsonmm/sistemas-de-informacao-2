@@ -1,22 +1,26 @@
 package padaoDemo;
 
-public class Janela {
+import java.util.ArrayList;
+import java.util.List;
 
-	private static Janela instance;
+public class Janela {
 	
-	private Janela() {
-		System.out.println("Abriu a janela");
-	}
+	private static Janela instancia;
+	private List<String> textos = new ArrayList<String>();
 	
-	public static Janela getInstance() {
-		if(instance == null)
-		{
-			instance = new Janela();
+	public static Janela obterInstanciaUnica() {
+		if(instancia == null) {
+			instancia = new Janela();
 		}
 		
-		return instance;
+		return instancia;
 	}
 	
-	
-	
+	public List<String> getTexto() {
+		return textos;
+	}
+
+	public void setTexto(String texto) {
+		this.textos.add(texto);
+	}	
 }

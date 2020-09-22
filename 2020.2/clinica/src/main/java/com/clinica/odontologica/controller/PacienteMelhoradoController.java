@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.clinica.odontologica.model.*;
+import com.clinica.odontologica.model.Paciente;
+import com.clinica.odontologica.model.Response;
 import com.clinica.odontologica.repository.Database;
 import com.clinica.odontologica.repository.PacienteRepository;
 
@@ -60,17 +62,30 @@ public class PacienteMelhoradoController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<Response<Paciente>> cadastrar(@Valid @RequestBody Paciente novoPaciente)
+	public ResponseEntity<Response<Paciente>> cadastrar(@Valid @RequestBody Paciente novoPaciente, BindingResult result)
 	{	
 		Response<Paciente> response = new Response<Paciente>(); 
 		
 		try
 		{		
-			pacienteRepository.cadastrar(novoPaciente);
-			response.setDados(novoPaciente);
+			if(result.hasErrors())
+			{			
+				response.setStatus(HttpStatus.BAD_REQUEST.value());
+				for(ObjectError  error : result.getAllErrors()) {
+					String key = String.valueOf(response.getErros().size() + 1);
+					
+					response.getErros().put(key, error.getDefaultMessage());
+				}
+				
+				return ResponseEntity.ok(response);
+			}
+			
 			response.setStatus(HttpStatus.OK.value());
+			pacienteRepository.cadastrar(novoPaciente);		
+			response.setDados(novoPaciente);
 			
 			return ResponseEntity.ok(response);
+			
 		}
 		catch(Exception e) {	
 			response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -78,6 +93,7 @@ public class PacienteMelhoradoController {
 			
 			return ResponseEntity.ok(response);
 		}
+		
 	}
 	
 	@DeleteMapping("/{id}")

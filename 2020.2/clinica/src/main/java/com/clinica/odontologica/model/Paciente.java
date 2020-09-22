@@ -10,7 +10,7 @@ public class Paciente {
 	
 	@NotEmpty(message = "O campo endereço é obrigatório")
 	private String endereco;
-	
+
 	public Paciente(int id, String nome, String endereco) {
 		this.id = id;
 		this.nome = nome;

@@ -113,13 +113,33 @@ public class PacienteMelhoradoController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Paciente> editar(@PathVariable int id, @RequestBody Paciente paciente){
+	public ResponseEntity<Response<Paciente>> editar(@PathVariable int id, @Valid @RequestBody Paciente paciente, BindingResult result){
+		
+		Response<Paciente> response = new Response<Paciente>(); 
+		
 		try {
-			Paciente pacienteEditado = pacienteRepository.editar(paciente, id);
-			return new ResponseEntity<Paciente>(pacienteEditado, HttpStatus.OK); 
+			
+			if(result.hasErrors())
+			{
+				response.setStatus(HttpStatus.BAD_REQUEST.value());
+				for(ObjectError  error : result.getAllErrors()) {
+					String key = String.valueOf(response.getErros().size() + 1);
+					
+					response.getErros().put(key, error.getDefaultMessage());
+				}
+				
+				return ResponseEntity.ok(response);
+			}
+			
+			response.setDados(pacienteRepository.editar(paciente, id));
+			response.setStatus(HttpStatus.OK.value());
+			return ResponseEntity.ok(response);
 		}
 		catch(Exception e) {
-			return new ResponseEntity<Paciente>(HttpStatus.BAD_REQUEST);
+			response.setStatus(HttpStatus.BAD_REQUEST.value());
+			response.getErros().put("1", "Falha ao editar novo paciente");
+			
+			return ResponseEntity.ok(response);
 		}
 	}
 }

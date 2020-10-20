@@ -17,17 +17,15 @@ public class Paciente {
 	@Id
 	@Column(name= "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(value = "Identificador único auto gerado")
+	@ApiModelProperty(value = "Identificador único para o paciente")
 	private int id;
 	
 	@Column(length = 30, nullable = false)
 	@NotEmpty(message = "O campo nome é obrigatório")
-	@ApiModelProperty(value = "Nome do paciente")
 	private String nome;
 	
 	@Column(length = 45)
 	@NotEmpty(message = "O campo endereço é obrigatório")
-	@ApiModelProperty(value = "Endereço do paciente")
 	private String endereco;
 
 	public Paciente() {

@@ -18,14 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.clinica.odontologica.model.Paciente;
 import com.clinica.odontologica.model.Response;
+import com.clinica.odontologica.repository.Database;
 import com.clinica.odontologica.repository.PacienteRepository;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.ApiResponse;
-
 @RestController
-@RequestMapping(path = "/v2/paciente", produces = "application/json")
+@RequestMapping("/v2/paciente")
 public class PacienteMelhoradoController {
 	
 	private PacienteRepository pacienteRepository;
@@ -33,15 +30,8 @@ public class PacienteMelhoradoController {
 	private PacienteMelhoradoController() {
 		this.pacienteRepository = new PacienteRepository();
 	}
-	
+		
 	//http://localhost:8080/paciente
-	@ApiOperation(value = "Retorna todos os paciente cadastrados")
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Sucesso"),
-			@ApiResponse(code = 403, message = "Você não tem permissão para acesssar este recurso"),
-			@ApiResponse(code = 404, message = "Endpoint não encontrado"),
-			@ApiResponse(code = 500, message = "Erro no servidor")
-	})
 	@GetMapping()
 	public Response<List<Paciente>> obterTodos(){		
 		
@@ -57,35 +47,14 @@ public class PacienteMelhoradoController {
 		catch(Exception e)
 		{
 			response.setStatus(HttpStatus.BAD_REQUEST.value());
-			response.getErros().put("1", "Falha ao cadastrar novo paciente");
-			
-			return response;
-		}
-	}
-	
-	@GetMapping("/{id}")
-	public Response<Paciente> obterPoId(@PathVariable int id){		
-		
-		Response<Paciente> response = new Response<Paciente>();
-		
-		try
-		{
-			response.setDados(pacienteRepository.obterPorId(id));
-			response.setStatus(HttpStatus.OK.value());
-			
-			return response;
-		}
-		catch(Exception e)
-		{
-			response.setStatus(HttpStatus.BAD_REQUEST.value());
-			response.getErros().put("1", "Falha ao obter o paciente");
+			response.getErros().put("1", "Falha ao obter a lista de pacientes");
 			
 			return response;
 		}
 	}
 
 	@PostMapping()
-	public Response<Paciente> cadastrar(@Valid @RequestBody Paciente novoPaciente, BindingResult result)
+	public ResponseEntity<Response<Paciente>> cadastrar(@Valid @RequestBody Paciente novoPaciente, BindingResult result)
 	{	
 		Response<Paciente> response = new Response<Paciente>(); 
 		
@@ -100,40 +69,38 @@ public class PacienteMelhoradoController {
 					response.getErros().put(key, error.getDefaultMessage());
 				}
 				
-				return response;
+				return ResponseEntity.ok(response);
 			}
 			
 			response.setStatus(HttpStatus.OK.value());
 			pacienteRepository.cadastrar(novoPaciente);		
 			response.setDados(novoPaciente);
 			
-			return response;
+			return ResponseEntity.ok(response);
 			
 		}
 		catch(Exception e) {	
 			response.setStatus(HttpStatus.BAD_REQUEST.value());
 			response.getErros().put("1", "Falha ao cadastrar novo paciente");
 			
-			return response;
+			return ResponseEntity.ok(response);
 		}
 		
 	}
 	
 	@DeleteMapping("/{id}")
-	public Response<String> deletar(@PathVariable int id){
+	public ResponseEntity<String> deletar(@PathVariable int id){
 		
 		Response<String> response = new Response<String>();
-				
+		
+		
 		try
 		{
 			pacienteRepository.remover(id);
-			response.setDados("Paciente removido com sucesso");
-			response.setStatus(HttpStatus.OK.value());
-			return response;
+			return new ResponseEntity<String>("Paciente removido com sucesso", HttpStatus.OK);
 		}
 		catch(Exception e) {
-			response.setStatus(HttpStatus.BAD_REQUEST.value());
-			return response; 
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	

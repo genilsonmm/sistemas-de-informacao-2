@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.clinica.odontologica.model.*;
+import com.clinica.odontologica.repository.Database;
 import com.clinica.odontologica.repository.PacienteRepository;
 
 @RestController
@@ -28,6 +29,9 @@ public class PacienteController {
 		Paciente joao = new Paciente(2, "João", "Catolé");
 		Paciente danilo = new Paciente(3, "Danilo", "Itarare");
 		
+		Database.getInstance().pacientes().add(maria);
+		Database.getInstance().pacientes().add(joao);
+		Database.getInstance().pacientes().add(danilo);
 	}
 	
 	//http://localhost:8080/paciente

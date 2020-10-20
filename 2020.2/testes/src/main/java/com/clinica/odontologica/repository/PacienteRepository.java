@@ -13,7 +13,7 @@ import com.clinica.odontologica.model.Paciente;
 
 public class PacienteRepository {
 
-	private EntityManagerFactory entityManagerFactory;
+	private EntityManagerFactory entityManagerFactory; 
 	
 	public PacienteRepository() {
 		this.entityManagerFactory = Persistence.createEntityManagerFactory("clinicaConfig");
@@ -21,14 +21,13 @@ public class PacienteRepository {
 	
 	public void cadastrar(Paciente paciente) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		EntityTransaction transaction =  entityManager.getTransaction();
+		EntityTransaction transaction = entityManager.getTransaction();
 		
-		try
-		{
+		try {
 			transaction.begin();
-						
+			
 			entityManager.persist(paciente);
-
+			
 			transaction.commit();
 		}
 		catch(Exception e) {
@@ -41,27 +40,21 @@ public class PacienteRepository {
 	
 	public List<Paciente> obterTodos(){
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		Query query = entityManager.createQuery("from " + Paciente.class.getName());
+		Query query = entityManager.createQuery("from " + Paciente.class.getName());	
 		return query.getResultList();
-	}
-	
-	public Paciente obterPorId(int id) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		return entityManager.find(Paciente.class, id);
 	}
 	
 	public void remover(int id) {			
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		EntityTransaction transaction =  entityManager.getTransaction();
+		EntityTransaction transaction = entityManager.getTransaction();
 		
 		Paciente paciente = entityManager.find(Paciente.class, id);
 		
-		try
-		{
+		try {
 			transaction.begin();
-						
+			
 			entityManager.remove(paciente);
-
+			
 			transaction.commit();
 		}
 		catch(Exception e) {
@@ -69,19 +62,37 @@ public class PacienteRepository {
 		}
 		finally {
 			entityManager.close();
-		}
+		}	
 	}
-		
+	
+	private Paciente obterPaciente(int id) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		return entityManager.find(Paciente.class, id);			
+	}
+	
 	public Paciente editar(Paciente paciente, int id) throws Exception {
-		/*
-		Paciente pacienteParaEditar = obterPaciente(id);
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityTransaction transaction = entityManager.getTransaction();
 		
-		if(pacienteParaEditar == null)
-			throw new Exception("Paciente não existe!");
+		Paciente pacienteAtualizado = entityManager.find(Paciente.class, id);
+		pacienteAtualizado.setNome(paciente.getNome());
 		
-		pacienteParaEditar.setNome(paciente.getNome());
-		pacienteParaEditar.setEndereço(paciente.getEndereco());
-		*/
-		return null;
+		try
+		{
+			transaction.begin();
+			
+			paciente = entityManager.merge(pacienteAtualizado);
+			
+			transaction.commit();
+			
+		}
+		catch(Exception error) {
+			transaction.rollback();
+		}
+		finally {
+			entityManager.close();
+		}
+		
+		return paciente;
 	}
 }
